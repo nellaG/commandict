@@ -5,6 +5,7 @@ version: 2
 
 jobs:
   test:
+    machine: true
     steps:
       - checkout
 
