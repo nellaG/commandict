@@ -6,8 +6,11 @@ version: 2
 jobs:
   test:
     parallelism: 2
+
     steps:
       - checkout
+
+      # Download and cache dependencies
       - restore_cache:
         keys:
           - venv-{{ checksum "requirements.txt" }}
@@ -16,7 +19,8 @@ jobs:
         name: Installing package dependencies...
         command: |
           if [[ ! -f ../venv ]]; then
-            pyvenv ..venv
+            python3 -m venv venv
+            ../venv/bin/activate
           fi
           ../venv/bin/pip install -r requirements.txt
 
@@ -31,6 +35,10 @@ jobs:
           ../venv/bin/pytest
           flake8
           yamllint .circleci/config.yml
+
+        -store-atricacts:
+          path: test-reports
+          destination: test-reports
 
 
 workflows:
