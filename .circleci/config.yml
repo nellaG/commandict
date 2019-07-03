@@ -11,31 +11,31 @@ jobs:
 
       # Download and cache dependencies
       - restore_cache:
-        keys:
-          - venv-{{ checksum "requirements.txt" }}
+          keys:
+            - venv-{{ checksum "requirements.txt" }}
 
       - run:
-        name: Installing package dependencies...
-        command: |
-          if [[ ! -f ../venv ]]; then
-            python3 -m venv venv
-            ../venv/bin/activate
-          fi
-          ../venv/bin/pip install -r requirements.txt
+          name: Installing package dependencies...
+          command: |
+            if [[ ! -f ../venv ]]; then
+              python3 -m venv ../venv
+              source ../venv/bin/activate
+            fi
+            ../venv/bin/pip install -r requirements.txt
 
       - save-cache:
-        key: venv-{{ checksum "requirements.txt" }}
-        paths: ../venv
+          key: venv-{{ checksum "requirements.txt" }}
+          paths: ../venv
 
       # Running test
       - run:
-        name: Running test...
-        command: |
-          ../venv/bin/pytest
-          flake8
-          yamllint .circleci/config.yml
+          name: Running test...
+          command: |
+            ../venv/bin/pytest
+            ../venv/bin/flake8
+            ../venv/bin/yamllint .circleci/config.yml
 
-        -store-atricacts:
+      - store_artifacts:
           path: test-reports
           destination: test-reports
 
