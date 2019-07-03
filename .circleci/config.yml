@@ -1,0 +1,40 @@
+---
+# commandict CI yaml file
+
+version: 2
+
+jobs:
+  test:
+    parallelism: 2
+    steps:
+      - checkout
+      - restore_cache:
+        keys:
+          - venv-{{ checksum "requirements.txt" }}
+
+      - run:
+        name: Installing package dependencies...
+        command: |
+          if [[ ! -f ../venv ]]; then
+            pyvenv ..venv
+          fi
+          ../venv/bin/pip install -r requirements.txt
+
+      - save-cache:
+        key: venv-{{ checksum "requirements.txt" }}
+        paths: ../venv
+
+      # Running test
+      - run:
+        name: Running test...
+        command: |
+          ../venv/bin/pytest
+          flake8
+          yamllint .circleci/config.yml
+
+
+workflows:
+  version: 2
+  test-then-build:
+    jobs:
+      - test
