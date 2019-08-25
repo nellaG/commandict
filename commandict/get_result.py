@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """ get_result.py """
 
 import sys
@@ -19,9 +20,13 @@ def parse(html: str):
                       attrs={'property': 'og:description'})[0].get('content')
 
 
-if __name__ == "__main__":
+def main():
     KEYWORD = sys.argv[1]
     url = f'{DAUM_DICT_HOST}search.do?q={KEYWORD}&dic={LANG}'
     response = requests.get(url)
     meanings = parse(response.text)
     print(meanings)
+
+
+if __name__ == "__main__":
+    main()
