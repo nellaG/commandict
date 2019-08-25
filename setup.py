@@ -1,5 +1,12 @@
 from setuptools import setup
 
+
+install_requires = {
+    'requests >= 2.22.0, < 2.23.0',
+    'beautifulsoup4 >= 4.7.1, < 4.7.2',
+}
+
+
 setup(name='commandict',
       version='0.1.0',
       description='Use Daum dic via CLI',
@@ -12,5 +19,6 @@ setup(name='commandict',
         [console_scripts]
         cmdct = commandict.get_result:main
         cmd = commandict.get_result:main
-    ''',
+      ''',
+      install_requires=list(install_requires),
       zip_safe=False)
