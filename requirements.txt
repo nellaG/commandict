@@ -1,5 +1,6 @@
-requests >= 2.22.0, < 2.23.0
+click >= 7.0, < 7.0.1
 beautifulsoup4 >= 4.7.1, < 4.7.2
 flake8 >= 3.7.7, < 3.8.0
+requests >= 2.22.0, < 2.23.0
 pytest >= 5.0.0, < 5.1.0
 yamllint >= 1.16.0, < 1.17.0

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ get_result.py """
 
+import click
 import sys
 
 import requests
@@ -20,9 +21,11 @@ def parse(html: str):
                       attrs={'property': 'og:description'})[0].get('content')
 
 
-def main():
-    KEYWORD = sys.argv[1]
-    url = f'{DAUM_DICT_HOST}search.do?q={KEYWORD}&dic={LANG}'
+@click.command()
+@click.argument('keyword')
+def main(keyword):
+    click.echo('Searching...')
+    url = f'{DAUM_DICT_HOST}search.do?q={keyword}&dic={LANG}'
     response = requests.get(url)
     meanings = parse(response.text)
     print(meanings)
