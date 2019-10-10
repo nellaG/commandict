@@ -17,8 +17,9 @@ setup(name='commandict',
       packages=['commandict'],
       entry_points='''
         [console_scripts]
-        cmdct = commandict.get_result:main
         cmd = commandict.get_result:main
+        cmdct = commandict.get_result:main
+        cmdic = commandict.get_result:main
       ''',
       install_requires=list(install_requires),
       zip_safe=False)
