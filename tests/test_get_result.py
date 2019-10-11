@@ -2,7 +2,8 @@
 
 import requests
 
-from commandict.get_result import parse, parse_detail
+from click.testing import CliRunner
+from commandict.get_result import main, parse, parse_detail
 
 
 DAUM_DICT_HOST = "https://dic.daum.net/"
@@ -28,6 +29,15 @@ def test_parse_with_polysemy():
     meanings, wordid = parse(response.text)
     assert meanings.startswith('1.시험')
     assert wordid == 'ekw000167718'
+
+
+def test_parse_no_result():
+    KEYWORD = 'cthulhu'
+    url = f'{DAUM_DICT_HOST}/search.do?q={KEYWORD}&dic={LANG}'
+    response = requests.get(url)
+    result, wordid = parse(response.text)
+    assert result == 'No results found.'
+    assert wordid == ''
 
 
 def test_parse_detail():
@@ -65,3 +75,13 @@ research: 연구, 조사, 탐구, 탐사'''
     result = parse_detail(detailed_text, wordid, 'antonym')
     antonym = 'No results found.'
     assert result == antonym
+
+
+def test_main_no_result():
+    KEYWORD = 'cthulhu'
+
+    runner = CliRunner()
+    result = runner.invoke(main, KEYWORD)
+    assert result.exit_code == 0
+    assert 'Searching...' in result.output
+    assert 'No results found.' in result.output
