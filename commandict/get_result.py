@@ -28,6 +28,9 @@ def parse(html: str):
     bs = BeautifulSoup(html, 'html.parser')
     content = bs.findAll('meta', attrs={'property': 'og:description'})[0]\
         .get('content')
+    if not content:
+        return 'No results found.', ''
+
     try:
         redir_url = bs.findAll('meta', attrs={'http-equiv': 'Refresh'})[0]\
             .get('content').split('URL=')[1]
@@ -72,6 +75,8 @@ def main(keyword):
     detailed_url = f'https://dic.daum.net/word/view.do?wordid={wordid}'
     detailed_text = None
     click.echo(meanings)
+    if meanings == 'No results found.' and wordid == '':
+        return
 
     while(True):
         value = click.prompt(click.style(COMMANDS, fg='white', bg='blue'))
