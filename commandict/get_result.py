@@ -66,8 +66,9 @@ def parse_detail(html: str, wordid: str, category: str):
 
 
 @click.command()
-@click.argument('keyword')
+@click.argument('keyword', metavar='<keyword>')
 def main(keyword):
+    """ Use DAUM Dictionary via terminal """
     click.echo('Searching...')
     url = f'{DAUM_DICT_HOST}search.do?q={keyword}&dic={LANG}'
     response = requests.get(url)
