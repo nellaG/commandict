@@ -10,7 +10,6 @@ from bs4 import BeautifulSoup
 
 DAUM_DICT_HOST = "https://alldic.daum.net/"
 
-# TODO: 설정에서 언어 입력받고 설정 저장할 수 있게
 LANG = 'eng'
 
 COMMAND_SET = {
@@ -52,7 +51,11 @@ def parse_detail(html: str, wordid: str, category: str):
     if category not in id_set.keys():
         pass
     else:
-        tags = bs.find(id=id_set[category]).findAll('li')
+        words = bs.find(id=id_set[category])
+        if not words:
+            # there's no antonym of this keyword
+            return 'No results found.'
+        tags = words.findAll('li')
         result = [
             f"{tag.find('a').text}: {tag.find('span').text}" for tag in tags
         ]
