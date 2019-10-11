@@ -2,6 +2,7 @@ from setuptools import setup
 
 
 install_requires = {
+    'click >= 7.0, < 7.0.1',
     'requests >= 2.22.0, < 2.23.0',
     'beautifulsoup4 >= 4.7.1, < 4.7.2',
 }
