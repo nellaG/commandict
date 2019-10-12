@@ -85,3 +85,13 @@ def test_main_no_result():
     assert result.exit_code == 0
     assert 'Searching...' in result.output
     assert 'No results found.' in result.output
+
+
+def test_main_undefined_command():
+    KEYWORD = 'command'
+    runner = CliRunner()
+    result = runner.invoke(main,
+                           args=KEYWORD,
+                           input='\n'.join(['undefined_command', 'q']))
+    assert result.exit_code == 0
+    assert "Sorry, I don't understand." in result.output
