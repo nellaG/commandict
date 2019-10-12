@@ -81,7 +81,11 @@ def main(keyword):
 
     while(True):
         value = click.prompt(click.style(COMMANDS, fg='white', bg='blue'))
-        command = COMMAND_SET[value]
+        try:
+            command = COMMAND_SET[value]
+        except KeyError:
+            click.echo("Sorry, I don't understand.")
+            continue
 
         if value != 'q':
             if detailed_text is None:
