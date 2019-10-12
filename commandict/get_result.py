@@ -2,18 +2,19 @@
 """ get_result.py """
 
 import click
-from urllib.parse import parse_qsl, urlparse
+from urllib.parse import parse_qsl, urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
 
 
-DAUM_DICT_HOST = "https://alldic.daum.net/"
+DAUM_DICT_HOST = "https://dic.daum.net/"
 
 LANG = 'eng'
 
 COMMAND_SET = {
     'a': 'antonym',
+    'e': 'example sentences',
     's': 'synonym',
     'q': 'quit'
 }
@@ -22,6 +23,12 @@ COMMAND_SET = {
 COMMANDS = "more: " + ' | '.join(
     [f'{COMMAND_SET[key]}({key})' for key in COMMAND_SET]
 )
+
+
+def example_url(wordid: str, page: int = 1):
+    example_host = f'{DAUM_DICT_HOST}/word/view_example_more.do'
+    qsl = f'?wordid={wordid}&summaryid=etc&page={page}'
+    return urljoin(example_host, qsl)
 
 
 def parse(html: str):
@@ -65,6 +72,21 @@ def parse_detail(html: str, wordid: str, category: str):
         return '\n'.join(result)
 
 
+def parse_example(url: str):
+    """ extract the example sentences """
+
+    html = requests.get(url).text
+    bs = BeautifulSoup(html, 'html.parser')
+    list_ = bs.findAll('li')
+    sentences = []
+    for l in list_:
+        eng_phrase = l.find('span', attrs={'txt_example'}).text.split('\n')[0]
+        mean_phrase = l.find('span', attrs={'mean_example'}).text
+        phrase_set = f'{eng_phrase}\n  -> {mean_phrase}\n\n'
+        sentences.append(phrase_set)
+    return ''.join(sentences)
+
+
 @click.command()
 @click.argument('keyword', metavar='<keyword>')
 def main(keyword):
@@ -88,12 +110,18 @@ def main(keyword):
             continue
 
         if value != 'q':
-            if detailed_text is None:
-                detailed_text = requests.get(detailed_url).text
+            if value == 'e':
+                result = parse_example(example_url(wordid))
+                click.echo(result)
 
-            result = parse_detail(detailed_text, wordid, command)
-            click.secho(command, fg='green')
-            click.echo(result)
+            else:
+                # a / s
+                if detailed_text is None:
+                    detailed_text = requests.get(detailed_url).text
+
+                result = parse_detail(detailed_text, wordid, command)
+                click.secho(command, fg='green')
+                click.echo(result)
         else:
             break
 

@@ -3,7 +3,8 @@
 import requests
 
 from click.testing import CliRunner
-from commandict.get_result import main, parse, parse_detail
+from commandict.get_result import (example_url, main, parse, parse_detail,
+                                   parse_example)
 
 
 DAUM_DICT_HOST = "https://dic.daum.net/"
@@ -38,6 +39,17 @@ def test_parse_no_result():
     result, wordid = parse(response.text)
     assert result == 'No results found.'
     assert wordid == ''
+
+
+def test_parse_example():
+    KEYWORD = 'buy'
+    url = f'{DAUM_DICT_HOST}/search.do?q={KEYWORD}&dic={LANG}'
+    response = requests.get(url)
+    _, wordid = parse(response.text)
+    exp_url = example_url(wordid)
+    result = parse_example(exp_url)
+    sentence_sample = 'Surprisingly, he has spent about $80,000 to buy the dolls!'  # noqa
+    assert sentence_sample in result
 
 
 def test_parse_detail():
