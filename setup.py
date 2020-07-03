@@ -9,7 +9,7 @@ install_requires = {
 
 
 setup(name='commandict',
-      version='0.1.4',
+      version='0.1.5',
       description='Use Daum dic via CLI',
       url='http://github.com/nellag/commandict',
       author='nellaG',
