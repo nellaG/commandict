@@ -23,4 +23,5 @@ setup(name='commandict',
         cmdic = commandict.get_result:main
       ''',
       install_requires=list(install_requires),
+      python_requires='>=3.6, <4',
       zip_safe=False)
